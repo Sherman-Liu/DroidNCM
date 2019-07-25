@@ -29,12 +29,11 @@
             android:text="@string/code" />
 
         <TextView
-
+            android:id="@+id/version"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="all"
-            android:gravity="center"
-            android:text="@string/app_version" />
+            android:gravity="center" />
     </LinearLayout>
 
 </FrameLayout>
