@@ -59,6 +59,11 @@ public class MainFinderActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                File targetDir = new File(Environment.getExternalStorageDirectory(), "Music");
+                if (!targetDir.exists()) {//create Music if not exist
+                    targetDir.mkdir();
+                }
                 NCMFileFinder ncmFileFinder = new NCMFileFinder(MainFinderActivity.this);
                 if (rootPath != null) {
                     Log.d("ncm", "rootPath " + rootPath);

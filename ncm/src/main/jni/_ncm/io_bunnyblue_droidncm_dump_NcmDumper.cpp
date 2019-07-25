@@ -37,7 +37,7 @@ JNIEXPORT jstring JNICALL Java_io_bunnyblue_droidncm_dump_NcmDumper_ncpDump(JNIE
   }
   catch (const std::exception &e)
   {
-     LOGE("find error %s ",e.what());
+      LOGE("find error %s ",e.what());
       env->ReleaseStringUTFChars(ncmPath, nativeString);
       return env->NewStringUTF(e.what());
   }
