@@ -284,9 +284,11 @@ void NeteaseCrypt::Dump()
 	char targetPath[1024] = {'\0'};
 	std::string metaName = std::string(mMetaData->name().c_str());
 	std::string albumName = std::string(mMetaData->album().c_str());
+	std::string artist = std::string(mMetaData->artist());
 	filterAllCase(metaName);
 	filterAllCase(albumName);
-	sprintf(targetPath, "/sdcard/Music/%s-%s", metaName.c_str(), albumName.c_str());
+	filterAllCase(artist);
+	sprintf(targetPath, "/sdcard/Music/%s-%s", artist.c_str(), metaName.c_str());
 	mDumpFilepath = std::string(targetPath);
 	n = 0x8000;
 	i = 0;
