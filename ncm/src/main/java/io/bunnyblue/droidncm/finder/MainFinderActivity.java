@@ -100,7 +100,7 @@ public class MainFinderActivity extends AppCompatActivity
     void help() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Usage");
-        builder.setMessage("点击信封扫面歌曲");
+        builder.setMessage("点击信封扫描歌曲");
         builder.setPositiveButton("🐻OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
