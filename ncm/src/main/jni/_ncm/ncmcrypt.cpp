@@ -256,8 +256,8 @@ void NeteaseCrypt::FixMetadata()
 		tag->setAlbum(TagLib::String(mMetaData->album(), TagLib::String::UTF8));
 	}
 
-	tag->setComment(TagLib::String("Create by netease copyright protected dump tool. author 5L", TagLib::String::UTF8));
-
+	//tag->setComment(TagLib::String("Create by netease copyright protected dump tool. author 5L", TagLib::String::UTF8));
+    tag->setComment(TagLib::String(m163key, TagLib::String::UTF8));
 	bool status=audioFile->save();
 	if (!status)
 	{
@@ -407,6 +407,8 @@ NeteaseCrypt::NeteaseCrypt(std::string const &path)
 		std::string swapModifyData;
 		std::string modifyOutData;
 		std::string modifyDecryptData;
+
+		m163key = std::string(modifyData, n);//patch from https://github.com/anonymous5l/ncmdump/pull/44/files
 
 		swapModifyData = std::string(modifyData + 22, n - 22);
 
