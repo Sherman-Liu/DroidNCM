@@ -1,4 +1,12 @@
 <resources>
+    <string-array name="sortTypeList">
+        <item>按名称升序</item>
+        <item>按名称降序</item>
+        <item>按日期升序</item>
+        <item>按日期降序</item>
+    </string-array>
+    <string name="tips_sort_type_changed">NCM列表分类已更改</string>
+    <string name="tips_sort_type_nochange">NCM列表分类未更改</string>
     <string name="app_name">DroidNCM</string>
     <string name="title_activity_main_finder">MainFinderActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

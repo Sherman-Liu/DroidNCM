@@ -11,6 +11,8 @@ import java.io.File;
 import io.bunnyblue.droidncm.dump.NcmDumper;
 import io.bunnyblue.droidncm.finder.MainFinderActivity;
 import io.bunnyblue.droidncm.finder.dummy.NCMFileContent;
+import io.bunnyblue.droidncm.history.NCMDatabaseHelper;
+import io.bunnyblue.droidncm.history.NCMHistory;
 
 public class OneConvertTask extends AsyncTask<NCMFileContent.NCMLocalFile, String, NCMFileContent.NCMLocalFile> {
     ProgressDialog progressDialog;
@@ -31,6 +33,9 @@ public class OneConvertTask extends AsyncTask<NCMFileContent.NCMLocalFile, Strin
             File target = new File(targetFile);
             if (target.exists()) {
                 ncmLocalFile.targetPath = targetFile;
+                NCMHistory ncmHistory = NCMDatabaseHelper.buildHistory(ncmLocalFile);
+                NCMDatabaseHelper.getInstance().ncmHistoryDAO().deleteByLocalPath(ncmLocalFile.localPath);
+                NCMDatabaseHelper.getInstance().ncmHistoryDAO().insertAll(ncmHistory);
                 return ncmLocalFile;
                 //  return target;
             }
@@ -69,10 +74,15 @@ public class OneConvertTask extends AsyncTask<NCMFileContent.NCMLocalFile, Strin
         progressDialog.dismiss();
         if (!TextUtils.isEmpty(file.error)) {
             Toast.makeText(context, file.error, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
+
         }
+
 
         ((MainFinderActivity) context).updateNCMFileList();
 
     }
+
 
 }
