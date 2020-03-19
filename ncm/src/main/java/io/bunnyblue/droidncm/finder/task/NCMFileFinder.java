@@ -11,9 +11,12 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 
 import io.bunnyblue.droidncm.finder.MainFinderActivity;
 import io.bunnyblue.droidncm.finder.dummy.NCMFileContent;
+import io.bunnyblue.droidncm.history.NCMDatabaseHelper;
+import io.bunnyblue.droidncm.history.NCMHistory;
 
 public class NCMFileFinder extends AsyncTask<File, String, NCMFileContent> {
     ProgressDialog progressDialog;
@@ -23,14 +26,29 @@ public class NCMFileFinder extends AsyncTask<File, String, NCMFileContent> {
         this.context = context;
     }
 
+    private NCMHistory findNCMHistory(File file, List<NCMHistory> histories) {
+        for (NCMHistory history : histories) {
+            if (file.getAbsolutePath().equals(history.fullPath)) {
+
+                if (new File(history.targetPath).exists()) {
+                    return history;
+                }
+            }
+
+        }
+        return null;
+
+    }
+
     @SuppressLint("WrongThread")
     @Override
     protected NCMFileContent doInBackground(File... files) {
+        List<NCMHistory> histories = NCMDatabaseHelper.getInstance().ncmHistoryDAO().getAll();
         if (files != null) {
-            NCMFileContent ncmFileContent = new NCMFileContent();
+            NCMFileContent ncmFileContent = new NCMFileContent(context);
             for (File file : files) {
-                if (!file.exists()){
-                    continue ;
+                if (!file.exists()) {
+                    continue;
                 }
 
                 Collection<File> fileCollection = FileUtils.listFiles(file, new String[]{"ncm"}, true);
@@ -39,9 +57,15 @@ public class NCMFileFinder extends AsyncTask<File, String, NCMFileContent> {
                         fileCollection) {
                     NCMFileContent.NCMLocalFile ncmLocalFile = new NCMFileContent.NCMLocalFile();
                     ncmLocalFile.localPath = localFile.getAbsolutePath();
-                    ncmLocalFile.content = localFile.getName();
+                    NCMHistory ncmHistory = findNCMHistory(localFile, histories);
+                    if (ncmHistory != null) {
+                        ncmLocalFile.targetPath = ncmHistory.targetPath;
+                    }
+                    ncmLocalFile.name = localFile.getName();
+                    ncmLocalFile.ncmSize = localFile.length();
+                    ncmLocalFile.lastModifyTime = localFile.lastModified();
                     ncmFileContent.addFile(ncmLocalFile);
-                    onProgressUpdate(ncmLocalFile.content);
+                    onProgressUpdate(ncmLocalFile.name);
 
                 }
             }
@@ -97,6 +121,7 @@ public class NCMFileFinder extends AsyncTask<File, String, NCMFileContent> {
     @Override
     protected void onPostExecute(NCMFileContent ncmFileContent) {
         super.onPostExecute(ncmFileContent);
+        ncmFileContent.requestSort();
         //   progressDialog.dismiss();
         ((Activity) context).runOnUiThread(new Runnable() {
             @Override

@@ -6,22 +6,41 @@
 
     <TextView
         android:id="@+id/item_number"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/nav_header_vertical_spacing"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:layout_margin="@dimen/list_space"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:visibility="gone" />
 
     <TextView
-        android:id="@+id/content"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/nav_header_vertical_spacing"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:layout_margin="@dimen/list_space"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/ncmPath"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/nav_header_vertical_spacing"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:layout_margin="@dimen/list_space"
+        android:textAppearance="?attr/textAppearanceListItemSecondary" />
+
+    <TextView
+
+        android:id="@+id/sizeAndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/list_space"
+        android:textAppearance="?attr/textAppearanceListItemSecondary" />
+
+    <TextView
+        android:id="@+id/targetPath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/list_space"
+        android:textAppearance="?attr/textAppearanceListItemSecondary"
+        android:textColor="@android:color/holo_green_light" />
+
 </LinearLayout>

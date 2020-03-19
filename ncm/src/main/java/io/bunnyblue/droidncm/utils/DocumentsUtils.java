@@ -8,8 +8,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.DocumentsContract;
-import android.support.v4.provider.DocumentFile;
 import android.util.Log;
+
+import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,10 +24,8 @@ import java.util.List;
 
 public class DocumentsUtils {
 
-    private static final String TAG = DocumentsUtils.class.getSimpleName();
-
     public static final int OPEN_DOCUMENT_TREE_CODE = 8000;
-
+    private static final String TAG = DocumentsUtils.class.getSimpleName();
     private static List<String> sExtSdCardPaths = new ArrayList<>();
 
     private DocumentsUtils() {

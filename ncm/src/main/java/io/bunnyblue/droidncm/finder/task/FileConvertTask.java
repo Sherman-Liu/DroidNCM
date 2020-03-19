@@ -10,33 +10,39 @@ import java.io.File;
 import io.bunnyblue.droidncm.dump.NcmDumper;
 import io.bunnyblue.droidncm.finder.MainFinderActivity;
 import io.bunnyblue.droidncm.finder.dummy.NCMFileContent;
+import io.bunnyblue.droidncm.history.NCMDatabaseHelper;
+import io.bunnyblue.droidncm.history.NCMHistory;
 
 public class FileConvertTask extends AsyncTask<NCMFileContent, String, Integer> {
     ProgressDialog progressDialog;
     Context context;
+
     public FileConvertTask(Context context) {
         this.context = context;
     }
 
     @Override
-    protected Integer doInBackground(NCMFileContent ...contents) {
+    protected Integer doInBackground(NCMFileContent... contents) {
         int index = 0;
-        NCMFileContent content=contents[0];
+        NCMFileContent content = contents[0];
         for (NCMFileContent.NCMLocalFile srcFile : content.getITEMS()) {
-            File file=new File(srcFile.localPath);
+            File file = new File(srcFile.localPath);
             publishProgress(file.getName());
             String targetFile = NcmDumper.ncpDump(file.getAbsolutePath());
-            if (targetFile.startsWith("/"))
-            {
+            if (targetFile.startsWith("/")) {
                 File target = new File(targetFile);
                 if (target.exists()) {
                     publishProgress(target.getAbsolutePath());
-                    srcFile.targetPath=target.getAbsolutePath();
+                    srcFile.targetPath = target.getAbsolutePath();
                     index++;
+
+                    NCMHistory ncmHistory = NCMDatabaseHelper.buildHistory(srcFile);
+                    NCMDatabaseHelper.getInstance().ncmHistoryDAO().deleteByLocalPath(srcFile.localPath);
+                    NCMDatabaseHelper.getInstance().ncmHistoryDAO().insertAll(ncmHistory);
                     //  return target;
                 }
-            }else {
-                srcFile.error= targetFile;
+            } else {
+                srcFile.error = targetFile;
             }
         }
 

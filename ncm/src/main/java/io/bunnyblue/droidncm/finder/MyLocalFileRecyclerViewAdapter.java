@@ -1,11 +1,11 @@
 package io.bunnyblue.droidncm.finder;
 
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,16 +42,10 @@ public class MyLocalFileRecyclerViewAdapter extends RecyclerView.Adapter<MyLocal
         NCMLocalFile ncmLocalFile = mValues.get(position);
         holder.mItem = ncmLocalFile;
         holder.mIdView.setText(ncmLocalFile.id);
-        if (TextUtils.isEmpty(ncmLocalFile.error)) {
-            if (TextUtils.isEmpty(ncmLocalFile.targetPath)) {
-                holder.mContentView.setText(ncmLocalFile.content);
-            } else {
-                holder.mContentView.setText(ncmLocalFile.targetPath);
-            }
-        }else {
-            holder.mContentView.setText(ncmLocalFile.error);
-        }
-        holder.mPath.setText(ncmLocalFile.localPath);
+        holder.name.setText(ncmLocalFile.name);
+        holder.mNCMPath.setText(ncmLocalFile.localPath);
+        holder.targetPath.setText(ncmLocalFile.targetPath);
+        holder.sizeAndDate.setText(Utils.formatDate(ncmLocalFile.lastModifyTime) + " " + Utils.formatFileSize(ncmLocalFile.ncmSize));
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,21 +77,25 @@ public class MyLocalFileRecyclerViewAdapter extends RecyclerView.Adapter<MyLocal
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-        public final TextView mContentView;
-        public final TextView mPath;
+        public final TextView name;
+        public final TextView mNCMPath;
         public NCMLocalFile mItem;
+        public TextView sizeAndDate;
+        TextView targetPath;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
-            mPath = view.findViewById(R.id.ncmPath);
+            name = (TextView) view.findViewById(R.id.name);
+            mNCMPath = view.findViewById(R.id.ncmPath);
+            targetPath = view.findViewById(R.id.targetPath);
+            sizeAndDate = view.findViewById(R.id.sizeAndDate);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + name.getText() + "'";
         }
     }
 }

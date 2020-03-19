@@ -1,29 +1,33 @@
 package io.bunnyblue.droidncm.finder;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.util.List;
@@ -37,6 +41,7 @@ import io.bunnyblue.droidncm.utils.DocumentsUtils;
 
 public class MainFinderActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    static String TAG = "ncm";
     public NCMFileContent ncmFileContent = null;
     public AboutFragment aboutFragment = null;
     LocalFileFragment localFileFragment = new LocalFileFragment(ncmFileContent);
@@ -52,10 +57,12 @@ public class MainFinderActivity extends AppCompatActivity
 
         Log.d("ncm", "rootPath " + rootPath);
         setContentView(R.layout.activity_main_finder);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,13 +101,56 @@ public class MainFinderActivity extends AppCompatActivity
                 showOpenDocumentTree();
             }
         }
+        init();
         help();
+    }
+
+    private void init() {
+        FloatingActionButton sortBtn = (FloatingActionButton) findViewById(R.id.sortBtn);
+        sortBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder sortDialog =
+                        new AlertDialog.Builder(MainFinderActivity.this);
+                //  SortTypeAdapter sortTypeAdapter=new SortTypeAdapter(MainFinderActivity.this);
+                String[] sortTypeList = getResources().getStringArray(R.array.sortTypeList);
+                SharedPreferences sharedPreferences = getSharedPreferences("ncm", Context.MODE_PRIVATE);
+                final int defaultType = SortTypeHelper.getDefaultType(MainFinderActivity.this);
+                final int[] typeRC = {defaultType};
+                sortDialog.setSingleChoiceItems(sortTypeList, defaultType, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.e(TAG, "onClick: " + which);
+                        typeRC[0] = which;
+                    }
+                });
+                sortDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (typeRC[0] == defaultType) {
+
+                            Toast.makeText(MainFinderActivity.this, R.string.tips_sort_type_nochange, Toast.LENGTH_SHORT).show();
+                        } else {
+                            SortTypeHelper.update(MainFinderActivity.this, typeRC[0]);
+                            ncmFileContent.updateSortType(typeRC[0]);
+                            ncmFileContent.requestSort();
+                            localFileFragment.updateSort();
+
+                            Toast.makeText(MainFinderActivity.this, R.string.tips_sort_type_changed, Toast.LENGTH_SHORT).show();
+                        }
+                        dialog.dismiss();
+
+                    }
+                });
+                sortDialog.create().show();
+            }
+        });
     }
 
     void help() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Usage");
-        builder.setMessage("点击信封扫描歌曲");
+        builder.setTitle("友情提示");
+        builder.setMessage("点击信封扫描歌曲\n左边的皮卡丘设置排序方式！");
         builder.setPositiveButton("🐻OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
