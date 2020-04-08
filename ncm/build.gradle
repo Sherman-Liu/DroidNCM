@@ -4,7 +4,7 @@ android {
     sourceSets {
         main {
             jni.srcDirs = [] //disable automatic ndk-build
-            jniLibs.srcDirs = ['src/main/libs']
+            //jniLibs.srcDirs = ['src/main/libs']
         }
     }
     compileSdkVersion 29
@@ -15,6 +15,12 @@ android {
         versionCode 3
         versionName "3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags "-frtti  -fexceptions"
+                arguments "-DANDROID_STL=c++_shared"
+            }
+        }
     }
 
     signingConfigs {
@@ -33,6 +39,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.10.2"
         }
     }
 }
