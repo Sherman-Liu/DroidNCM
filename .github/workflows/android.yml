@@ -1,0 +1,19 @@
+name: Build Android
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  watch:
+    types: [started]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Android Github Action
+      uses: Vukan-Markovic/Github-Android-Action@1.2
