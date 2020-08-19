@@ -13,8 +13,8 @@ android {
         applicationId "io.bunnyblue.droidncm"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 3
-        versionName "3.0"
+        versionCode 31
+        versionName "3.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
