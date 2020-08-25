@@ -277,6 +277,19 @@ void filterAllCase(std::string &str)
 	replace(str, ">", "＞");
 	replace(str, "|", "｜");
 }
+//fix https://github.com/bunnyblueair/DroidNCM/issues/23
+void filterAllCaseForArtist(std::string &str)
+{
+    replace(str, "\\", "＼");
+    replace(str, "/", ",");
+    replace(str, "?", "？");
+    replace(str, ":", "：");
+    replace(str, "*", "＊");
+    replace(str, "\"", "");
+    replace(str, "<", "＜");
+    replace(str, ">", "＞");
+    replace(str, "|", "｜");
+}
 void NeteaseCrypt::Dump()
 {
 	int n, i;
@@ -285,9 +298,10 @@ void NeteaseCrypt::Dump()
 	std::string metaName = std::string(mMetaData->name().c_str());
 	std::string albumName = std::string(mMetaData->album().c_str());
 	std::string artist = std::string(mMetaData->artist());
+	//LOGE("albumName.() %s",artist.c_str());
 	filterAllCase(metaName);
 	filterAllCase(albumName);
-	filterAllCase(artist);
+    filterAllCaseForArtist(artist);
 	sprintf(targetPath, "/sdcard/Music/%s - %s", artist.c_str(), metaName.c_str());
 	mDumpFilepath = std::string(targetPath);
 	n = 0x8000;
