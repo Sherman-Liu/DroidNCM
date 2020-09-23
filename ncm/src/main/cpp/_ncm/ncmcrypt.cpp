@@ -102,7 +102,7 @@ NeteaseMusicMetadata::NeteaseMusicMetadata(cJSON *raw)
 		for (i = 0; i < artistLen - 1; i++)
 		{
 			mArtist += std::string(cJSON_GetStringValue(cJSON_GetArrayItem(cJSON_GetArrayItem(swap, i), 0)));
-			mArtist += "/";
+			mArtist += ",";
 		}
 		mArtist += std::string(cJSON_GetStringValue(cJSON_GetArrayItem(cJSON_GetArrayItem(swap, i), 0)));
 	}
